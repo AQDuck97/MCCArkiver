@@ -1,0 +1,74 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:MCCArkiver.ViewModels"
+             xmlns:views="using:MCCArkiver.Views"
+             x:DataType="vm:GamesViewModel"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="MCCArkiver.Views.GameView">
+    <UserControl.Styles>
+        <Style Selector="ListBoxItem">
+            <Setter Property="Padding" Value="5,2" />
+            <!-- <Setter Property="Opacity" Value="1" /> -->
+        </Style>
+    </UserControl.Styles>
+    <Grid Margin="10">
+        <Border CornerRadius="10" HorizontalAlignment="Stretch" Background="#202020" Padding="2">
+            <ScrollViewer>
+                <Grid>
+                    <ItemsControl ItemsSource="{Binding Games.Games}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel HorizontalAlignment="Center" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid RowDefinitions="Auto,*" Margin="2">
+                                    <Grid Margin="10,0">
+                                        <Label Content="{Binding Name}" />
+                                        <Label Content="{Binding Matches.Count}" HorizontalAlignment="Right" />
+                                    </Grid>
+                                    <ListBox Grid.Row="1" ItemsSource="{Binding Matches}"
+                                             CornerRadius="10" Width="350"
+                                             Margin="5"
+                                             MaxHeight="{Binding $parent[ItemsControl].((vm:GamesViewModel)DataContext).MaxHeight}">
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <!-- <Border CornerRadius="5" Background="Aqua" Padding="1"> -->
+                                                    <Grid ColumnDefinitions="*, Auto" Background="#262626">
+                                                        <StackPanel Margin="5,0">
+                                                            <TextBlock Text="{Binding Title}" Foreground="White"
+                                                                       TextWrapping="WrapWithOverflow" />
+                                                            <Grid Opacity="0.3">
+                                                                <TextBlock Text="{Binding Date}" />
+                                                                <TextBlock Text="{Binding Duration}"
+                                                                           HorizontalAlignment="Right" />
+                                                            </Grid>
+                                                        </StackPanel>
+                                                        <Button Grid.Column="1" Content="Recall" Background="#151515" 
+                                                                BorderBrush="SeaGreen" Width="50" HorizontalContentAlignment="Center"
+                                                                Padding="2" Margin="5,0" IsVisible="{Binding InGame}"
+                                                                VerticalContentAlignment="Center"
+                                                                VerticalAlignment="Stretch"
+                                                                Command="{Binding Remove}" />
+                                                        <Button Grid.Column="1" Content="Export" Background="#151515"
+                                                                Padding="2" Margin="5,0" IsVisible="{Binding !InGame}"
+                                                                VerticalContentAlignment="Center"
+                                                                VerticalAlignment="Stretch" Width="50"
+                                                                Command="{Binding Import}" />
+                                                    </Grid>
+                                                <!-- </Border> -->
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
+            </ScrollViewer>
+        </Border>
+    </Grid>
+</UserControl>

@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:MCCArkiver.ViewModels"
+             x:DataType="vm:ControlsViewModel"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="MCCArkiver.Views.ControlsView">
+    <UserControl.Styles>
+        <Style Selector="Button">
+            <Setter Property="Background" Value="#353535"></Setter>
+        </Style>
+    </UserControl.Styles>
+    <Grid VerticalAlignment="Top" ColumnDefinitions="*,Auto">
+        <WrapPanel VerticalAlignment="Top">
+            <ToggleButton Content="Auto" IsChecked="{Binding AutoScan}" Command="{Binding ToggleScan}"
+                          IsEnabled="{Binding Conf.ArchivePath.Length}" Background="Black" />
+            <Button Content="QuickScan" Background="DarkGreen" Command="{Binding QuickScan}"
+                    IsEnabled="{Binding Conf.ArchivePath.Length}" />
+            <Button Content="Scan Ark" IsEnabled="{Binding Conf.ArchivePath.Length}" Command="{Binding ArkScan}" />
+            <Button Content="Load Games" IsEnabled="{Binding Conf.ArchivePath.Length}"  Command="{Binding LoadGames}" />
+            <Button Content="Quick Save" IsEnabled="{Binding Conf.ArchivePath.Length}"  Command="{Binding SaveGames}" />
+            <Button Content="Legacy Scan" Command="{Binding Legacy}"
+                    IsVisible="{Binding Conf.LegacyArk.Length}" IsEnabled="{Binding Conf.ArchivePath.Length}" />
+        </WrapPanel>
+        <Button IsVisible="{Binding IsLinux}" Grid.Column="1" VerticalAlignment="Top" Content="Exit" Background="DarkRed" Opacity="0.4" HorizontalAlignment="Right" 
+                Command="{Binding Exit}"/>
+    </Grid>
+</UserControl>

@@ -1,0 +1,206 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:MCCArkiver.ViewModels"
+             xmlns:views="using:MCCArkiver.Views"
+             x:DataType="vm:ShisnoViewModel"
+             CornerRadius="10,10,0,0"
+
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="MCCArkiver.Views.ShisnoView">
+    <UserControl.Styles>
+        <SimpleTheme />
+        <Style Selector="ListBox.filters ListBoxItem:selected Border">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+        <Style Selector="ToggleButton:checked">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="1" />
+        </Style>
+        <Style Selector="Button#Dismiss">
+            <Setter Property="Foreground" Value="Gray" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+        <Style Selector="Button:pointerover">
+            <Setter Property="Foreground" Value="Red" />
+        </Style>
+
+        <!-- <Style Selector="ListBoxItem:selected"> -->
+        <!--     <Setter Property="IsSelected" Value="False" /> -->
+        <!-- </Style> -->
+        <!-- <Style Selector="ListBoxItem"> -->
+        <!--     <Setter Property="Opacity" Value="0.8" /> -->
+        <!-- </Style> -->
+        <!-- -->
+        <!-- <Style Selector="ListBoxItem:pointerover /template/ ContentPresenter"> -->
+        <!--     <Setter Property="Background" Value="Transparent" /> -->
+        <!--     <Setter Property="Opacity" Value="1.2" /> -->
+        <!-- </Style> -->
+
+        <Style Selector="Expander:expanded">
+            <Setter Property="Background" Value="#333333" />
+        </Style>
+
+    </UserControl.Styles>
+
+    <Grid RowDefinitions="Auto,*">
+
+        <Grid Margin="5,0" HorizontalAlignment="Stretch" IsVisible="{Binding Prog.Max}">
+            <ProgressBar Height="2" Margin="50,0"
+                         Value="{Binding Prog.Val}" Maximum="{Binding Prog.Max}" />
+            <Label Content="{Binding Prog.Val}" VerticalAlignment="Top" />
+            <Label Content="{Binding Prog.Max}" VerticalAlignment="Top" HorizontalAlignment="Right" />
+            <Label Content="{Binding Prog.Info}" VerticalAlignment="Top" HorizontalAlignment="Center" />
+        </Grid>
+
+        <Expander Grid.Row="1" CornerRadius="10" IsExpanded="{Binding Log.Errored}" x:Name="Expander"
+                  MaxHeight="{Binding MaxHeight}" HorizontalAlignment="Stretch">
+            <Expander.Header>
+                <Grid>
+                    <Control.Styles>
+                        <FluentTheme />
+                    </Control.Styles>
+                    <Label Content="Logs" />
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Label Content="{Binding Log.Status}" VerticalAlignment="Center" />
+                        <Button Content="x" IsVisible="{Binding Log.Status.Length}" x:Name="Dismiss"
+                                Command="{Binding DismissStatus}" />
+                    </StackPanel>
+                </Grid>
+            </Expander.Header>
+            <Grid RowDefinitions="Auto,*">
+                <Grid Margin="10,0" HorizontalAlignment="Stretch">
+                    <Control.Styles>
+                        <FluentTheme />
+                    </Control.Styles>
+                    <CheckBox x:Name="ScrollBtn" IsChecked="{Binding AutoScroll}" Content="Autoscroll">
+                    </CheckBox>
+                    <Label Content="No logs" IsVisible="{Binding !Log.Logs.Count}"
+                           HorizontalAlignment="Center" HorizontalContentAlignment="Center" />
+                    <Button Content="Clear logs" HorizontalAlignment="Right" Command="{Binding ClearLogs}"
+                            IsVisible="{Binding Log.Logs.Count}" />
+                </Grid>
+                <ListBox Grid.Row="1" CornerRadius="10,10,0,0" ItemsSource="{Binding Log.Logs}" Focusable="False"
+                         AutoScrollToSelectedItem="{Binding AutoScroll}" HorizontalAlignment="Stretch" Margin="2,0,2,2"
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled" IsVisible="{Binding Log.Logs.Count}"
+                         SelectedItem="{Binding Log.Last}" SelectionMode="Single, Toggle">
+                    <Control.Styles>
+                        <FluentTheme />
+
+                        <Style Selector="ListBoxItem">
+                            <Setter Property="Padding" Value="0" />
+                            <!-- <Setter Property="Opacity" Value="1" /> -->
+                        </Style>
+                    </Control.Styles>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid ColumnDefinitions="Auto,Auto,Auto,*">
+                                <Control.Styles>
+                                    <SimpleTheme/>
+                                </Control.Styles>
+                                <TextBlock Grid.Column="1" Text="{Binding Time}" VerticalAlignment="Center" Width="70" />
+                                <!-- Is error -->
+                                <Label Grid.Column="2" BorderThickness="1,1,0,1" BorderBrush="Red"
+                                       Background="Transparent" VerticalAlignment="Stretch"
+                                       VerticalContentAlignment="Center"
+                                       Content="ERROR:" FontWeight="Bold" Foreground="Red"
+                                       IsVisible="{Binding IsError}" />
+                                <Expander Grid.Column="3" IsVisible="{Binding IsError}"
+                                          BorderThickness="0,1,0,1" BorderBrush="Red">
+                                    <Expander.Header>
+                                        <Grid ColumnDefinitions="Auto,*">
+                                            <Label Content="{Binding Title}" />
+                                            <Label Grid.Column="1" Content="(Click to expand)" Foreground="Gray"
+                                                   IsVisible="{Binding !$parent[Expander].IsExpanded}" />
+                                        </Grid>
+                                    </Expander.Header>
+                                    
+                                    <TextBox Text="{Binding Message}" IsReadOnly="True" TextWrapping="WrapWithOverflow"
+                                             HorizontalAlignment="Stretch"
+                                             Background="Transparent" Foreground="Red" BorderThickness="0" />
+                                </Expander>
+                                <!-- Is alert -->
+                                <Label Grid.Column="2" BorderThickness="1,1,0,1" BorderBrush="Orange"
+                                       Background="Transparent" VerticalAlignment="Stretch"
+                                       VerticalContentAlignment="Center"
+                                       Content="ALERT:" FontWeight="Bold" Foreground="Orange"
+                                       IsVisible="{Binding IsAlert}" />
+                                <Expander Grid.Column="3" IsVisible="{Binding IsAlert}"
+                                          BorderThickness="0,1,0,1" BorderBrush="Orange">
+                                    <Expander.Header>
+                                        <Grid ColumnDefinitions="Auto,*">
+                                            <Label Content="{Binding Title}" />
+                                            <Label Grid.Column="1" Content="(Click to expand)" Foreground="Gray"
+                                                   IsVisible="{Binding !$parent[Expander].IsExpanded}" />
+                                        </Grid>
+                                    </Expander.Header>
+                                    
+                                    <TextBox Text="{Binding Message}" IsReadOnly="True" TextWrapping="WrapWithOverflow"
+                                             HorizontalAlignment="Stretch"
+                                             Background="Transparent" Foreground="Orange" BorderThickness="0" />
+                                </Expander>
+                                <!-- Is debug -->
+                                <Label Grid.Column="2" BorderThickness="1,1,0,1" BorderBrush="Purple"
+                                       Background="Transparent" VerticalAlignment="Stretch"
+                                       VerticalContentAlignment="Center"
+                                       Content="DEBUG:" FontWeight="Bold" Foreground="Purple"
+                                       IsVisible="{Binding IsDebug}" />
+                                <Expander Grid.Column="3" IsVisible="{Binding IsDebug}"
+                                          BorderThickness="0,1,0,1" BorderBrush="Purple">
+                                    <Expander.Header>
+                                        <Grid ColumnDefinitions="Auto,*">
+                                            <Label Content="{Binding Title}" />
+                                            <Label Grid.Column="1" Content="(Click to expand)" Foreground="Gray"
+                                                   IsVisible="{Binding !$parent[Expander].IsExpanded}" />
+                                        </Grid>
+                                    </Expander.Header>
+                                    
+                                    <TextBox Text="{Binding Message}" IsReadOnly="True" TextWrapping="WrapWithOverflow"
+                                             HorizontalAlignment="Stretch"
+                                             Background="Transparent" Foreground="White" BorderThickness="0" />
+                                </Expander>
+                                <!-- Is update -->
+                                <Label Grid.Column="2" BorderThickness="1,1,0,1" BorderBrush="DodgerBlue"
+                                       Background="Transparent" VerticalAlignment="Stretch"
+                                       VerticalContentAlignment="Center"
+                                       Content="UPDATE:" FontWeight="Bold" Foreground="DodgerBlue"
+                                       IsVisible="{Binding IsUpdate}" />
+                                <Expander Grid.Column="3" IsVisible="{Binding IsUpdate}"
+                                          BorderThickness="0,1,0,1" BorderBrush="DodgerBlue">
+                                    <Expander.Header>
+                                        <Grid ColumnDefinitions="Auto,*">
+                                            <Label Content="{Binding Title}" />
+                                            <Label Grid.Column="1" Content="(Click to expand)" Foreground="Gray"
+                                                   IsVisible="{Binding !$parent[Expander].IsExpanded}" />
+                                        </Grid>
+                                    </Expander.Header>
+                                    
+                                    <TextBox Text="{Binding Message}" IsReadOnly="True" TextWrapping="WrapWithOverflow"
+                                             HorizontalAlignment="Stretch"
+                                             Background="Transparent" Foreground="DodgerBlue" BorderThickness="0" />
+                                </Expander>
+                                <!-- Normal -->
+                                <TextBox Grid.Column="3" IsReadOnly="True" TextWrapping="Wrap" Background="Transparent"
+                                         BorderThickness="0"
+                                         Text="{Binding Message}" IsVisible="{Binding IsNote}" />
+                                <!-- Soft Alert -->
+                                <TextBox Grid.Column="3" IsReadOnly="True" TextWrapping="Wrap" Background="Transparent"
+                                         BorderThickness="0"
+                                         Text="{Binding Message}" IsVisible="{Binding IsSoftAlert}" Foreground="Orange" />
+                                <!-- Good -->
+                                <TextBox Grid.Column="3" IsReadOnly="True" TextWrapping="Wrap" Background="Transparent"
+                                         BorderThickness="0" Foreground="ForestGreen"
+                                         Text="{Binding Message}" IsVisible="{Binding IsGood}" />
+                                <Button Grid.Column="0" CommandParameter="{Binding Timestamp}" Content="x"
+                                        Foreground="Gray" BorderThickness="0"
+                                        Command="{Binding $parent[ItemsControl].((vm:ShisnoViewModel)DataContext).Delete}" />
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+        </Expander>
+    </Grid>
+</UserControl>

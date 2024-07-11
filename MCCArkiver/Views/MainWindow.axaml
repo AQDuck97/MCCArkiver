@@ -1,0 +1,50 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:MCCArkiver.ViewModels"
+        xmlns:views="using:MCCArkiver.Views"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        Width="1100" Height="{Binding WinHeight}"
+        x:Class="MCCArkiver.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="MCCArkiver">
+    <Window.Styles>
+        <!-- <Style Selector="ToggleButton#Settings:checked"> -->
+        <!--     <Setter Property="Background" Value="Black"/> -->
+        <!--     <Setter Property="BorderThickness" Value="1"/> -->
+        <!-- </Style> -->
+        <Style Selector="Expander">
+            <Setter Property="Padding" Value="0"/>
+        </Style>
+    </Window.Styles>
+    <Grid RowDefinitions="Auto,*,Auto">
+        <Grid Grid.Row="1">
+            <Grid ColumnDefinitions="Auto, Auto, Auto" VerticalAlignment="Top">
+                <Label FontSize="30" Content="Halo:MCC Arkiver" />
+                <!-- <Label Grid.Column="1" FontSize="15" Content="{Binding Version}" /> -->
+            </Grid>
+            <Grid Margin="0,50,0,0">
+                <views:ContentView />
+            </Grid>
+            <Grid ColumnDefinitions="Auto,Auto" HorizontalAlignment="Right">
+                <Expander VerticalAlignment="Top" x:Name="SettingsExp" IsExpanded="True">
+                    <Expander.Header>
+                        <Grid ColumnDefinitions="Auto,*" HorizontalAlignment="Stretch">
+                            <Svg Path="/Assets/gear-solid.svg" HorizontalAlignment="Left" VerticalAlignment="Top"
+                                 Height="25" />
+                            <Label Grid.Column="1" HorizontalAlignment="Center" Content="SETTINGS"
+                                   FontWeight="ExtraBold"
+                                   IsVisible="{Binding $parent[Expander].IsExpanded}" />
+                        </Grid>
+                    </Expander.Header>
+                    <Grid>
+                        <Label Content="{Binding Version}" VerticalAlignment="Top" HorizontalAlignment="Right"/>
+                        <views:ConfView Margin="10"/>
+                    </Grid>
+                </Expander>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

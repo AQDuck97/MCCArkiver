@@ -1,0 +1,83 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:MCCArkiver.ViewModels"
+             xmlns:views="using:MCCArkiver.Views"
+             x:DataType="vm:ConfViewModel"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             MinWidth="300"
+             x:Class="MCCArkiver.Views.ConfView">
+    <UserControl.Styles>
+        <Style Selector="ToggleButton:checked">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="1" />
+        </Style>
+    </UserControl.Styles>
+    <StackPanel>
+        <Grid RowDefinitions="Auto,Auto">
+            <Label Content="GamerTag" />
+            <TextBox Grid.Row="1" Text="{Binding TempConf.GamerTag}" />
+        </Grid>
+        <Grid RowDefinitions="Auto,Auto">
+            <Label Content="Archive path" />
+            <Grid Row="1" ColumnDefinitions="*, Auto">
+                <TextBox Text="{Binding TempConf.ArchivePath}" />
+                <Button Grid.Column="1" Content="Browse" CommandParameter="archive" Command="{Binding Browse}" />
+            </Grid>
+        </Grid>
+        <Grid RowDefinitions="Auto,Auto">
+            <Label Content="Legacy archive" />
+            <Grid Row="1" ColumnDefinitions="*, Auto">
+                <TextBox Text="{Binding TempConf.LegacyArk}" />
+                <Button Grid.Column="1" Content="Browse" CommandParameter="legacy" Command="{Binding Browse}" />
+            </Grid>
+        </Grid>
+        <!-- Linux Settings -->
+        <Expander IsVisible="{Binding IsLinux}" HorizontalAlignment="Stretch">
+            <Expander.Header>
+                <Label Content="Linux settings" Foreground="Aqua" />
+            </Expander.Header>
+            <Control.Styles>
+                <SimpleTheme />
+            </Control.Styles>
+            <StackPanel Margin="5">
+                <Control.Styles>
+                    <FluentTheme />
+                </Control.Styles>
+                <Label Content="Prefix path" />
+                <Grid ColumnDefinitions="*,Auto">
+                    <TextBox Text="{Binding TempConf.Prefix}" />
+                    <Button Grid.Column="1" Content="Browse" CommandParameter="prefix" Command="{Binding Browse}" />
+                </Grid>
+                <Border BorderBrush="Red" BorderThickness="1" Padding="10" CornerRadius="5" Margin="5" 
+                        IsVisible="{Binding !Conf.IsInstalled}">
+                    <StackPanel>
+                        <TextBlock Margin="10,0" Text="Desktop file missing!" FontWeight="Bold" Foreground="Red" />
+                        <TextBlock Margin="10" Text="'mccarkiver.desktop' will be added to ~/.local/share/applications" />
+                        <Button Content="Create .desktop file" HorizontalAlignment="Right" Background="Black" 
+                                Command="{Binding CreateDesktop}"/>
+                    </StackPanel>
+                </Border>
+                <Button Content="Delete .desktop file" Background="Black" IsVisible="{Binding Conf.IsInstalled}"
+                        Command="{Binding CreateDesktop}"/>
+            </StackPanel>
+        </Expander>
+        <Grid>
+            <Button Content="Reset" Command="{Binding Reset}" />
+            <Button Content="Save" HorizontalAlignment="Right" Command="{Binding SaveConf}" />
+        </Grid>
+        <Expander Header="Updates" HorizontalAlignment="Stretch" Padding="2" Margin="5">
+            <Control.Styles>
+                <SimpleTheme />
+            </Control.Styles>
+            <Grid RowDefinitions="Auto,*">
+                <Control.Styles>
+                    <FluentTheme />
+                </Control.Styles>
+                <CheckBox IsChecked="{Binding TempConf.AutoUpdate}" Content="Auto-check updates" />
+                <views:UpdateView Grid.Row="1" />
+            </Grid>
+        </Expander>
+    </StackPanel>
+</UserControl>

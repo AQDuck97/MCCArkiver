@@ -1,0 +1,44 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:MCCArkiver.ViewModels"
+             x:DataType="vm:UpdateViewModel"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             
+             x:Class="MCCArkiver.Views.UpdateView">
+    <UserControl.Styles>
+        <FluentTheme/>
+    </UserControl.Styles>
+    <StackPanel>
+        <Grid ColumnDefinitions="*,Auto">
+            <TextBox Text="{Binding Conf.UpdateUrl}" />
+            <Button Grid.Column="1" Content="{Binding BtnTxt}" Padding="2" VerticalAlignment="Stretch" VerticalContentAlignment="Center" 
+                    Background="Transparent"
+                    Command="{Binding Check}">
+            </Button>
+        </Grid>
+        <Grid MaxHeight="250">
+            <ScrollViewer>
+                <StackPanel MaxWidth="500">
+                    <TextBlock Padding="10" TextWrapping="WrapWithOverflow" Text="{Binding Result}" IsVisible="{Binding Result.Length}"/>
+                    <ItemsControl ItemsSource="{Binding Releases}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel HorizontalAlignment="Stretch" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="5">
+                                    <Label Content="{Binding Tag}" FontSize="20" />
+                                    <TextBlock Text="{Binding Description}" TextWrapping="Wrap" Padding="20,0,0,0" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+    </StackPanel>
+</UserControl>
