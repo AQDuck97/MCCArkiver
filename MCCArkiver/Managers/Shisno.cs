@@ -80,6 +80,7 @@ public class Shisno
         Log.Last = Log.Logs.LastOrDefault();
         Log.Status = $"{title}";
         Log.Errored = true;
+        Main.Notify(msg);
     }
 
     public static void Status(string msg)

@@ -68,12 +68,15 @@ public class ArchiveManager
 
         Shisno.Status(CopyDone());
 
-        if (Main.IsLinux)
-            Main.Notify(CopyDone());
+        if (_copyCount > 0)
+        {
+            if (Main.IsLinux)
+                Main.Notify(CopyDone());
 
-        GameManager.SortGames();
+            GameManager.SortGames();
 
-        Main.SaveJson(GameManager.GameCollection, Main.Conf.ArchivePath);
+            Main.SaveJson(GameManager.GameCollection, Main.Conf.ArchivePath);
+        }
     }
 
     public static async void LegacyProbe(string dir)
