@@ -126,11 +126,6 @@ public class Main
         {
             Shisno.Error($"Failed to launch {app}", e);
         }
-        // await proc.WaitForExitAsync();
-        
-        // string output = await proc.StandardOutput.ReadToEndAsync();
-        // Console.WriteLine($"{app} {args}\n{output}");
-        // return output;
     }
 
     public static void SaveJson(object obj, string path)
@@ -140,7 +135,7 @@ public class Main
         string json = JsonSerializer.Serialize(obj, opts);
         string file = $"{path}/{name}.json";
         File.WriteAllText(file, json);
-        Shisno.Good($"Saved to {file}");
+        // Shisno.Good($"Saved to {file}");
     }
 
     public static object ReadJson(object obj, string path)

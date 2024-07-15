@@ -70,12 +70,12 @@ public class ArchiveManager
 
         if (_copyCount > 0)
         {
-            if (Main.IsLinux)
-                Main.Notify(CopyDone());
+            // if (Main.IsLinux)
+            //     Main.Notify(CopyDone());
+            Main.SaveJson(GameManager.GameCollection, Main.Conf.ArchivePath);
 
             GameManager.SortGames();
 
-            Main.SaveJson(GameManager.GameCollection, Main.Conf.ArchivePath);
         }
     }
 
