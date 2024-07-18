@@ -56,27 +56,33 @@ public class ArchiveManager
 
     public static async Task CheckSource()
     {
-        Shisno.Status("Scanning...");
-        ResetCounters();
-        CarnageProbe();
-        string[] games = Directory.GetDirectories($"{Main.UserContent}/UserContent");
-
-        foreach (var game in games)
+        string userContent = $"{Main.UserContent}/UserContent";
+        if(Directory.Exists(userContent))
         {
-            await Runner(game);
+            Shisno.Status("Scanning...");
+            ResetCounters();
+            CarnageProbe();
+            string[] games = Directory.GetDirectories(userContent);
+
+            foreach (var game in games)
+            {
+                await Runner(game);
+            }
+
+            Shisno.Status(CopyDone());
+
+            if (_copyCount > 0)
+            {
+                // if (Main.IsLinux)
+                //     Main.Notify(CopyDone());
+                Main.SaveJson(GameManager.GameCollection, Main.Conf.ArchivePath);
+
+                GameManager.SortGames();
+
+            }
         }
-
-        Shisno.Status(CopyDone());
-
-        if (_copyCount > 0)
-        {
-            // if (Main.IsLinux)
-            //     Main.Notify(CopyDone());
-            Main.SaveJson(GameManager.GameCollection, Main.Conf.ArchivePath);
-
-            GameManager.SortGames();
-
-        }
+        else
+            Shisno.Status("UserContent folder missing! Please go to 'Settings > My Files' to ensure film files are generated");
     }
 
     public static async void LegacyProbe(string dir)
@@ -222,7 +228,7 @@ public class ArchiveManager
             }
 
             text = text.Substring(start, text.IndexOf(endWord) - start).Replace("\0", "");
-            // mode = text.Substring(0, text.IndexOf(split));
+            mode = text.Substring(0, text.IndexOf(split));
 
             int idx = text.IndexOf(split) + split.Length;
             map = text.Substring(idx, text.Length - idx);
@@ -372,9 +378,6 @@ public class ArchiveManager
                 player = players.First();
 
             time = TimeSpan.FromSeconds(int.Parse(player.Attribute("mSecondsPlayed").Value));
-            // time = TimeSpan.FromSeconds(int.Parse(root.Element("Players")
-            //     .Element("Player").Attribute("mSecondsPlayed").Value));
-            // _game = Main.Translate(root.Element("GameEnum").Attribute("mGameEnum").Value, "games");
             _game = _gamesArr[int.Parse(root.Element("GameEnum").Attribute("mGameEnum").Value)];
         }
         else
